@@ -1,0 +1,135 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{fancyhdr}
+\usepackage{multicol}
+\usepackage{geometry}
+\geometry{a4paper, portrait, margin=1in}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Metodos de Optimización}}
+\fancyhead[R]{Universidad Nacional del Altiplano - FINESI}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+\section*{ACTIVIDAD N° 1}
+
+\noindent Elija una variable y complete las definiciones (Variable, Función y Restricción), considere incluir referencias bibliográficas, y ejemplos prácticos de organización y operacionalización de la variable.
+
+\vspace{0.5cm}
+
+\section*{VARIABLE: Índice de Calidad del Aire (ICA)}
+
+\noindent El Índice de Calidad del Aire (ICA) es una herramienta que proporciona una medida global del estado del aire en un lugar y momento específicos, generalmente basado en los datos recopilados por una estación de monitoreo ambiental. Este índice tiene como objetivo principal ofrecer una referencia comprensible para el público en general sobre el nivel de contaminación del aire y sus posibles efectos en la salud.
+
+\vspace{0.5cm}
+
+
+\section*{FUNCIÓN}
+
+\[
+f(x)=Nivel de calidad del aire en puntos ICA
+\]
+
+\noindent
+Donde:
+
+\begin{itemize}
+\item x = concentración de contaminantes (como PM2.5, PM10, CO, NO₂, O₃, etc.)
+\item f(x) = valor del ICA, una escala de 0 a mas de 300 que traduce esas concentraciones a una interpretación sobre la salud.
+\end{itemize}
+
+\vspace{0.5cm}
+
+
+\section*{RESTRICCIONES}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{ICA (valor)} & \textbf{Nivel de preocupación} & \textbf{Color} \\
+\hline
+0 -- 50   & Buena                            & Verde \\
+51 -- 100 & Moderada                         & Amarillo \\
+101 -- 150 & Insalubre para grupos sensibles & Naranja \\
+151 -- 200 & Insalubre                        & Rojo \\
+201 -- 300 & Muy insalubre                    & Morado \\
+301 en adelante & Peligroso                   & Granate \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{1cm}
+
+\noindent En los EE.UU. la Agencia de Protección Ambiental (Environmental Protection Agency – EPA) ha desarrollado un Índice de Calidad del Aire (ICA) conocido en inglés como Air Quality Index (AQI) que se utiliza para informar las condiciones diarias de la calidad del aire. El ICA, es una herramienta utilizada por varias agencias para proveer al público información sobre la calidad del aire y si los niveles de contaminación en este representan un problema de salud. 
+\vspace{0.5cm}
+
+\noindent El documento \textit{Technical Assistance Document for the Reporting of Daily Air Quality – the Air Quality Index (AQI)} (EPA-454/B-24-002, mayo 2024) emitido por la EPA, proporciona una guía técnica detallada para agencias locales en EE. UU. sobre cómo reportar la calidad del aire diario usando el Índice de Calidad del Aire (AQI). Clasifica el aire en seis categorías de color según el nivel de riesgo para la salud.
+
+\noindent Y abarca cinco contaminantes principales reglamentados por la Ley de Aire Limpio para calcular el AQI :
+
+\begin{itemize}
+    \item Ozono (O\textsubscript{3})
+    \item Material particulado (PM2.5 y PM10)
+    \item Monóxido de carbono (CO)
+    \item Dióxido de nitrógeno (NO\textsubscript{2})
+    \item Dióxido de azufre (SO\textsubscript{2})
+\end{itemize}
+
+\vspace{0.5cm}
+
+\noindent El Indice de Calidad del Aire (ICA) toma la concentración de cada contaminante (por ejemplo, PM2.5, PM10, CO, O₃, NO₂) y la convierte en un valor dentro de una escala estándar de 0 a 500, usando una fórmula lineal por tramos.
+
+\[
+I_p = \frac{I_{Hi} - I_{Lo}}{BP_{Hi} - BP_{Lo}} (C_p - BP_{Lo}) + I_{Lo}
+\]
+\noindent
+Donde:
+
+\begin{itemize}
+\item Ip = Indice de Calidad del Aire del contaminante p
+\item Cp = La concentración truncada del contaminante p
+\item BPHI = el punto de corte de concentración que es mayor o igual a Cp
+\item BPLO = el punto de corte de concentración que es menor o igual a Cp
+\item IHi = el valor de AQI correspondiente a BPHI
+\item ILo = el valor de AQI correspondiente a BPLo
+\end{itemize}
+
+\vspace{0.5cm}
+
+
+
+
+\section*{EJEMPLO}
+
+\noindent En 2022, la concentración media anual de PM2{,}5 en la ciudad de Peshawar fue de 92 microgramos por metro cúbico de aire ($\mu$g/m\textsuperscript{3}). Las PM2{,}5, partículas de 2{,}5 micras o menos de diámetro, son responsables de enfermedades respiratorias y cardíacas, y constituyen el contaminante atmosférico más común.
+
+\noindent Aplicando la fórmula del ICA para PM2{,}5, se obtiene:
+
+\[
+f(92) = 175 => Insalubre
+\]
+
+\noindent Este valor indica que la calidad del aire fue dañina para la salud, especialmente para grupos sensibles como niños, adultos mayores y personas con enfermedades preexistentes.
+\vspace{0.5cm}
+
+
+
+\section*{REFERENCIAS BIBLIOGRAFICAS}
+
+\begin{itemize}
+\item Technical Assistance Document for the Reporting of Daily Air Quality – the Air Quality Index (AQI) (En inglés)
+\item AQI Basics in Spanish | AirNow.gov. (s. f.-b). \texttt{https://www.airnow.gov/aqi/aqi-basics-in-spanish/}
+\item Cuesta SantosO., Collazo ArandaA., Wallo VázquezA., Sánchez NavarroP., \& Labrador MonteroR. (1). Utilización de un indice de calidad del aire (ICA) en asentamientos humanos. resultados preliminares. Revista Cubana De Meteorología, 9(2). Recuperado a partir de \texttt{http://rcm.insmet.cu/index.php/rcm/article/view/360}
+\item Cuesta SantosO., Wallo VázquezA., Collazo ArandaA., \& Castellanos PentónP. (2018). Contaminación atmosférica en el municipio Regla: Aplicación del índice de calidad del aire (ICA). Revista Cubana De Meteorología, 12(1). Recuperado a partir de \texttt{http://rcm.insmet.cu/index.php/rcm/article/view/308}
+\end{itemize}
+
+\vspace{1cm}
+
+\noindent\textbf{FIORELLA Y. PAREDES COAGUILA \hfill COD.0231982}
+
+\end{document}
+
+\end{document}
