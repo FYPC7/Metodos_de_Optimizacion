@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado Gauss-Jordan</title>
+</head>
+<body>
+    <h1>Resultado del sistema</h1>
+
+    <h2>Soluciones:</h2>
+    <ul>
+        {% for var, sol in emparejados %}
+        <li><strong>{{ var }} = {{ "%.2f"|format(sol) }}</strong></li>
+        {% endfor %}
+
+    </ul>
+
+    <h2>Pasos intermedios:</h2>
+    {% for descripcion, paso in pasos %}
+        <h3>{{ descripcion }}</h3>
+        <table border="1">
+            {% for fila in paso %}
+                <tr>
+                    {% for valor in fila %}
+                        <td>{{ "%.3f"|format(valor) }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+
+    <br><a href="{{ url_for('index') }}">Volver al inicio</a>
+</body>
+</html>

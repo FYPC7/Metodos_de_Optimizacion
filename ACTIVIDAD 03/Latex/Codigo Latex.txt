@@ -1,0 +1,72 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{parskip}
+\geometry{a4paper, margin=1in}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Métodos de Optimización}}
+\fancyhead[R]{Universidad Nacional del Altiplano - FINESI}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{\small Fiorella Y. Paredes Coaguila - CÓD. 231982}
+
+\begin{document}
+
+\section*{\textbf{ACTIVIDAD N°03}}
+
+Adjuntar el Método Visual de la solución desarrollada. (FastHTML, Shiny, Flask)
+\vspace{0.5cm}
+\subsection*{\textbf{IMPLEMENTACIÓN DEL MÉTODO DE GAUSS-JORDAN EN FLASK}}
+
+Se presenta el desarrollo de la solución del método de \textbf{Gauss-Jordan} implementado en \textbf{Flask}, framework ligero para el desarrollo web en Python.  
+Se adjunta tanto el código con los resultados en consola, la versión con interfaz gráfica y la visualización en el navegador.
+\vspace{0.5cm}
+\subsection*{Código con Resultados en Consola}
+
+Se muestra una captura del código fuente utilizado para resolver el método de Gauss-Jordan directamente en consola:
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{consola_codigo.png}
+
+\vspace{0.3cm}
+
+\includegraphics[width=0.9\textwidth]{consola_codigo2.png}
+\end{center}
+
+\subsection*{Código con Interfaz Gráfica}
+
+\begin{itemize}
+  \item \textbf{\textit{Archivo: \texttt{app.py}}}
+
+  \includegraphics[width=0.9\textwidth]{app_py.png}
+  
+  \vspace{0.3cm}
+  
+  \includegraphics[width=0.88\textwidth]{app2_py.png}
+  
+  \item \textbf{\textit{Archivo: \texttt{index.html}}}
+  
+  \includegraphics[width=0.9\textwidth]{index_html.png}
+  
+  \item \textbf{\textit{Archivo: \texttt{resultado.html}}}
+  
+  \includegraphics[width=0.9\textwidth]{resultado_html.png}
+\end{itemize}
+
+\subsection*{Visualización de la Interfaz Gráfica}
+
+Captura de la interfaz web tal como se visualiza en el navegador.
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{interfaz_web1.png}
+
+\vspace{0.3cm}
+
+\includegraphics[width=0.9\textwidth]{interfaz_web2.png}
+\end{center}
+
+\end{document}
