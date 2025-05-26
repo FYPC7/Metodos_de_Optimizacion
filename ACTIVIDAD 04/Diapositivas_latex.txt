@@ -1,0 +1,96 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+
+\title{Metodología para la gestión de inventarios en tiendas de barrio mediante aprendizaje automático y programación lineal entera}
+\author{}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+
+\vspace{-1.2cm}  % <- ahora el bloque sube más
+ % <- reduce espacio entre título y contenido
+
+\begin{block}{Contexto del problema}
+Después de predecir la demanda semanal de 14 productos usando modelos como \textbf{SVM}, \textbf{ARx} y \textbf{GP}, se necesita tomar decisiones de compra considerando que:
+\begin{itemize}
+    \item El capital disponible es \textbf{limitado}.
+    \item No se pueden comprar \textbf{fracciones} de producto.
+    \item Se busca \textbf{maximizar la ganancia} con base en la predicción de ventas y el presupuesto disponible.
+\end{itemize}
+\end{block}
+\end{frame}
+
+% METODOLOGÍA
+\begin{frame}{Metodología}
+\begin{itemize}
+    \item Se generaron \textbf{datos sintéticos} de ventas semanales.
+    \item Se usaron modelos de predicción:
+    \begin{itemize}
+        \item ARx (AutoRegresivo)
+        \item SVM (Máquina de Vectores de Soporte)
+        \item GP (Procesos Gaussianos)
+    \end{itemize}
+    \item Se predijo la demanda semanal de cada producto (\textbf{vector Z}).
+\end{itemize}
+\end{frame}
+
+% PROGRAMACIÓN LINEAL
+\begin{frame}{Aplicación de Programación Lineal Entera}
+\begin{itemize}
+    \item Se optimizó cuántas unidades de cada producto comprar.
+    \item \textbf{Variable:} \( Z^* \) = unidades a comprar por producto.
+\end{itemize}
+
+\begin{block}{Función objetivo}
+Maximizar la utilidad total:
+\[
+f(Z^*) = p_1Z_1^* + p_2Z_2^* + \ldots + p_{14}Z_{14}^*
+\]
+\end{block}
+
+\begin{block}{Restricciones}
+\begin{itemize}
+    \item Presupuesto semanal disponible \( G_m \).
+    \item Límites máximos y mínimos por producto.
+\end{itemize}
+\end{block}
+
+\textbf{Herramienta usada:} Modelo ILP (Integer Linear Programming)
+\end{frame}
+
+% JUSTIFICACIÓN
+\begin{frame}{Justificación del Uso de la Programación Lineal}
+\begin{itemize}
+    \item Las cantidades deben ser \textbf{enteras}.
+    \item Hay \textbf{limitaciones económicas}.
+    \item Se requiere una \textbf{decisión óptima automatizada}.
+    \item Permite tomar decisiones \textbf{basadas en datos}, no en intuición.
+    \item Técnica eficiente y compatible con los modelos predictivos.
+\end{itemize}
+\end{frame}
+
+% RESULTADOS Y CONCLUSIÓN
+\begin{frame}{Resultados y Conclusión}
+\begin{itemize}
+    \item El modelo \textbf{ARx} fue el mejor predictor de demanda.
+    \item El uso de ILP permitió:
+    \begin{itemize}
+        \item Obtener \textbf{máximas ganancias} con menor inversión.
+        \item Priorizar productos con \textbf{mayor rentabilidad}.
+        \item Mantener proporción de ganancias incluso con bajo capital.
+    \end{itemize}
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Conclusión}
+La programación lineal entera permite una \textbf{gestión inteligente y rentable del inventario} en tiendas pequeñas.
+\end{block}
+\end{frame}
+
+\end{document}
