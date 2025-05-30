@@ -1,0 +1,288 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+  language=Python,
+  backgroundcolor=\color{white},   % color de fondo
+  basicstyle=\ttfamily\footnotesize,  % estilo de fuente
+  keywordstyle=\color{blue},      % palabras clave como for, if, etc.
+  stringstyle=\color{red},        % cadenas de texto
+  commentstyle=\color{gray},      % comentarios
+  showstringspaces=false,         % no muestra espacios en strings
+  frame=single,                   % marco alrededor del código
+  breaklines=true                 % saltar líneas largas
+}
+
+% Encabezado personalizado
+\setbeamertemplate{headline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1ex,left]{section in head/foot}%
+    \hspace{1em} \textbf{Métodos de Optimización}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1ex,right]{section in head/foot}%
+    \textbf{Universidad Nacional del Altiplano} \hspace{1em}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Información del título
+\title[Gauss-Jordan]{PROGRAMACIÓN LINEAL CON EL MÉTODO DE GAUSS JORDAN}
+\subtitle{Implementación en Python}
+\author{Ccora Quispe Kenny Leonel \\ Butron Maquera Tania \\ Paredes Coaguila Fiorella}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{¿Qué es el Método de Gauss-Jordan?}
+El método de Gauss-Jordan es una técnica utilizada para resolver sistemas de ecuaciones lineales.  
+Es una extensión del método de eliminación de Gauss, que transforma la matriz aumentada del sistema en una matriz identidad para encontrar la solución directa.
+
+\textbf{Objetivo:} Obtener una matriz identidad en la parte izquierda y las soluciones del sistema en la columna derecha.
+\end{frame}
+
+\begin{frame}{Objetivo del programa}
+Ingresar ecuaciones lineales Y convertirlas automáticamente a una matriz numérica, resolverlas usando el método de Gauss-Jordan y mostrar la solución final en consola
+\end{frame}
+
+\begin{frame}{Lenguaje y librerias}
+Lenguaje: Python 3
+Librerías utilizadas:
+    \begin{itemize}
+        \item re : Para analizar texto y extraer coeficientes de las ecuaciones.
+        \item numpy: Para manipular matrices numéricas y realizar operaciones algebraicas.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{¿Cómo funciona el programa?}
+    \begin{itemize}
+        \item El usuario escribe ecuaciones lineales como: 2x + 3y = 9
+        \item Se extraen los coeficientes numéricos usando expresiones regulares (re)
+        \item Se crea una matriz aumentada con los coeficientes y los términos \item independientes.
+        \item Se aplica el método de Gauss-Jordan para resolver el sistema.
+        \item Se muestran las soluciones en consola.
+
+    \end{itemize}
+    \\codigo :
+\end{frame}
+\begin{lstlisting}
+import re
+import numpy as np
+
+def obtener_numeros(ecuacion):
+    izquierda, derecha = ecuacion.split("=")
+
+    if izquierda[0] not in "+-":
+        izquierda = "+" + izquierda  # Aseguramos que todos los términos tengan signo
+
+    # Busca todos los términos como +2x, -3y, +z
+    terminos = re.findall(r'[+-](?:\d*\.?\d*)?[a-zA-Z]', izquierda)
+    coeficientes = []
+    #print(terminos)
+    for termino in terminos:
+        matchd = re.match(r'([+-]?\d*\.?\d*)[a-zA-Z]', termino)
+        numero = matchd.group(1)
+        #print(numero)
+        if numero in ["+", "-"]:  # Es +x o -y (coeficiente implícito)
+            numero += "1"
+        coeficientes.append(float(numero))
+    coeficientes.append(float(derecha))
+    return coeficientes
+
+def gauss_jordan(matriz, n):
+    print("Matriz inicial:")
+    print(matriz)
+
+    for i in range(n):
+        matriz[i] = matriz[i] / matriz[i][i]
+        for j in range(n):
+            if i != j:
+                matriz[j] = matriz[j] - matriz[i] * matriz[j][i]
+
+    return matriz[:, -1]  # Última columna son los resultados
+
+def main():
+    print("=== Resolución por el método de Gauss-Jordan ===")
+    print("Ingresa una ecuación por línea. Ejemplo: 2x + 3y = 9")
+    print("Cuando termines, escribe 'fin'\n")
+
+    ecuaciones = []
+    while True:
+        entrada = input(f"Ecuación {len(ecuaciones)+1}: ")
+        if entrada.lower() == 'fin':
+            break
+        ecuaciones.append(entrada)
+
+    # Extraemos las variables de la primera ecuación
+    variables = sorted(set(re.findall(r'[a-zA-Z]', ecuaciones[0])))
+    print(f"\nVariables encontradas: {variables}\n")
+
+    A = []
+    for eq in ecuaciones:
+        res = obtener_numeros(eq)
+        A.append(res)  
+        #A.append(coef)
+
+    A = np.array(A, dtype=float)
+    soluciones = gauss_jordan(A, len(variables))
+
+    print("\nSolución del sistema:")
+    for var, sol in zip(variables, soluciones):
+        print(f"{var} = {sol:.2f}")
+
+if _name_ == "_main_":
+    main()
+
+\end{lstlisting}
+
+\begin{frame}{Planteamiento del problema}
+\begin{block}{Enunciado}
+\footnotesize
+Supongamos que una empresa fabrica tres tipos de productos: A, B y C. La empresa tiene un número limitado de horas disponibles en tres máquinas diferentes: M1, M2 y M3. Los productos requieren una cantidad específica de horas en cada máquina para ser producidos.
+
+Se sabe que:
+\begin{itemize}
+    \item Para el producto A: requiere 2 horas en M1, 3 horas en M2 y 2 hora en M3.
+    \item Para el producto B: requiere 3 horas en M1, 2 horas en M2 y 4 horas en M3.
+    \item Para el producto C: requiere 1 hora en M1, 2 horas en M2 y 3 horas en M3.
+\end{itemize}
+Sabemos que en total se tienen 30 horas disponibles en M1, 20 horas disponibles en M2 y 24 horas disponibles en M3.
+\textbf{Instrucciones:}
+\begin{enumerate}[a.]
+    \item Plantee el sistema de ecuaciones.
+    \item Resuélvalo utilizando el método de Gauss-Jordan.
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Datos organizados}
+\begin{block}{Resumen de los datos}
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Producto} & \textbf{Ecuación} \\
+\midrule
+Maquina 1 & $2x + 3y + 2z = 30$ \\
+Maquina 2 &$3x + 2y + 2z = 20$ \\
+Maquina 3 & $x + 4y + 3z = 24$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+\end{frame}
+
+\begin{frame}{Parte a: Sistema de ecuaciones}
+
+\frametitle{Matriz Aumentada}
+Para resolverlo mediante Gauss-Jordan, escribimos el sistema de ecuaciones en forma de matriz aumentada:
+\[
+\left( \begin{array}{ccc|c}
+2 & 3 & 2 & 30 \\
+3 & 2 & 2 & 20 \\
+1 & 4 & 3 & 24 \\
+\end{array} \right)
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Pasos para Resolver el Sistema}
+\begin{itemize}
+  \item Hacer que el primer elemento de la primera fila sea 1 dividiendo la primera fila por 2:
+  \[
+  \left( \begin{array}{ccc|c}
+  1 & 1.5 & 1 & 15 \\
+  3 & 2 & 2 & 20 \\
+  1 & 4 & 3 & 24 \\
+  \end{array} \right)
+  \]
+  
+  \item Eliminar el 3 en la primera columna de la segunda fila:
+  \[
+  \left( \begin{array}{ccc|c}
+  1 & 1.5 & 1 & 15 \\
+  0 & -2.5 & -1 & -25 \\
+  1 & 4 & 3 & 24 \\
+  \end{array} \right)
+  \]
+  
+  \item Hacer que el primer elemento de la tercera fila sea 0:
+  \[
+  \left( \begin{array}{ccc|c}
+  1 & 1.5 & 1 & 15 \\
+  0 & -2.5 & -1 & -25 \\
+  0 & 2.5 & 2 & 9 \\
+  \end{array} \right)
+  \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Continuación del Proceso}
+\begin{itemize}
+  \item Hacer que el segundo elemento de la segunda fila sea 1 multiplicando la segunda fila por \( \frac{-1}{2.5} \):
+  \[
+  \left( \begin{array}{ccc|c}
+  1 & 1.5 & 1 & 15 \\
+  0 & 1 & 0.4 & 10 \\
+  0 & 2.5 & 2 & 9 \\
+  \end{array} \right)
+  \]
+
+  \item Eliminar el 1.5 en la primera fila utilizando la segunda fila:
+  \[
+  \left( \begin{array}{ccc|c}
+  1 & 0 & 1.4 & 7 \\
+  0 & 1 & 0.4 & 10 \\
+  0 & 2.5 & 2 & 9 \\
+  \end{array} \right)
+  \]
+  
+  \item Eliminar el 2.5 en la tercera fila:
+  \[
+  \left( \begin{array}{ccc|c}
+  1 & 0 & 1.4 & 7 \\
+  0 & 1 & 0.4 & 10 \\
+  0 & 0 & 0.2 & -16 \\
+  \end{array} \right)
+  \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Soluciones}
+Al continuar el proceso de Gauss-Jordan y simplificar la matriz, obtenemos las siguientes soluciones:
+\[
+\left( \begin{array}{ccc|c}
+  1 & 0 & 0 & 6.40 \\
+  0 & 1 & 0 & 16.40 \\
+  0 & 0 & 1 & -16.00 \\
+\end{array} \right)
+\]
+
+Esto significa que:
+\[
+x = 6.40, \quad y = 16.40, \quad z = -16.00
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Interpretación}
+La solución nos indica que la producción óptima para los productos A, B y C es:
+
+\begin{itemize}
+  \item Producto A: Producir 6.4 unidades.
+  \item Producto B: Producir 16.4 unidades.
+  \item Producto C: No debe ser producido, ya que no se pueden producir cantidades negativas.
+\end{itemize}
+
+Esto sugiere que, bajo las restricciones de horas disponibles, no se debe producir el producto C.
+\end{frame}
+
+\end{document}
