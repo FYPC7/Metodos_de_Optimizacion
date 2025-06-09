@@ -1,0 +1,209 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+% Configuración de colores
+\definecolor{azuloscuro}{RGB}{30,60,114}
+\definecolor{azulclaro}{RGB}{42,82,152}
+\definecolor{amarillo}{RGB}{255,235,59}
+
+% Configuración del tema
+\setbeamercolor{title}{fg=white,bg=azuloscuro}
+\setbeamercolor{frametitle}{fg=white,bg=azulclaro}
+\setbeamercolor{block title}{bg=amarillo,fg=black}
+\setbeamercolor{block body}{bg=amarillo!20,fg=black}
+\setbeamercolor{structure}{fg=azulclaro}
+
+% Información del documento
+\title[Método de Lagrange]{Optimización de Costos\\Método de Multiplicadores de Lagrange}
+\subtitle{Caso: Fábrica de Zapatos}
+\author{Presentado por: Fiorella Yannet Paredes Coaguila}
+\date{\today}
+
+\begin{document}
+
+% Título
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Problema
+\begin{frame}{Problema}
+    \begin{block}{Situación Empresarial}
+        Una fábrica de calzado recibe un pedido de \textbf{2000 pares de zapatos} que deben ser producidos en \textbf{dos plantas diferentes}.
+        
+        \vspace{0.3cm}
+        
+        \textbf{Variables:}
+        \begin{itemize}
+            \item $x_1$: Número de pares producidos en la Planta 1
+            \item $x_2$: Número de pares producidos en la Planta 2
+        \end{itemize}
+    \end{block}
+    \begin{block}{Función Objetivo}
+        La función de costos totales está dada por:
+        
+        \vspace{0.5cm}
+        
+        \begin{equation}
+            \boxed{C(x_1, x_2) = 0.3x_1^2 + 8x_1 + 0.2x_2^2 + 15x_2}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+
+% Restricción
+\begin{frame}{Restricción y Objetivo}
+    \begin{alertblock}{Restricción del Problema}
+        El total de producción debe cumplir con el pedido:
+        
+        \vspace{0.5cm}
+        
+        \begin{equation}
+            \boxed{g(x_1, x_2) = x_1 + x_2 = 2000}
+        \end{equation}
+    \end{alertblock}
+        \vspace{0.5cm}
+    \textbf{Objetivo:} Determinar cuántos pares debe producir cada planta para obtener el \textbf{costo mínimo}.
+\end{frame}
+
+
+% Paso 1
+\begin{frame}{Paso 1: Calcular las Derivadas Parciales}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Derivada respecto a $x_1$}
+                \begin{align*}
+                    \frac{\partial C}{\partial x_1} &= \lambda \frac{\partial g}{\partial x_1}\\
+                    0.6x_1 + 8 &= \lambda \cdot 1\\
+                    \lambda &= 0.6x_1 + 8
+                \end{align*}
+            \end{block}
+        \end{column}
+        
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Derivada respecto a $x_2$}
+                \begin{align*}
+                    \frac{\partial C}{\partial x_2} &= \lambda \frac{\partial g}{\partial x_2}\\
+                    0.4x_2 + 15 &= \lambda \cdot 1\\
+                    \lambda &= 0.4x_2 + 15
+                \end{align*}
+            \end{block}
+        \end{column}
+    \end{columns}
+    \begin{block}{Paso 2: Igualar las Expresiones de $\lambda$}
+        \begin{align*}
+            0.6x_1 + 8 &= 0.4x_2 + 15\\
+            0.6x_1 &= 0.4x_2 + 7\\
+            x_1 &= \frac{0.4x_2 + 7}{0.6}
+        \end{align*}
+    \end{block}
+\end{frame}
+
+% Paso 3
+\begin{frame}{Paso 3: Sustituir en la Restricción}
+    \begin{block}{Sustituyendo en $x_1 + x_2 = 2000$}
+        \begin{align*}
+            \frac{0.4x_2 + 7}{0.6} + x_2 &= 2000\\
+            \frac{0.4x_2 + 7 + 0.6x_2}{0.6} &= 2000\\
+            \frac{x_2 +7}{0.6} &= 2000\\
+            x_2 + 7 &= 1200\\
+            x_2 &= 1193
+        \end{align*}
+    \end{block}
+    \begin{alertblock}{Resultado}
+        \begin{equation}
+            \boxed{x_2 = 1193}
+        \end{equation}
+    \end{alertblock}
+\end{frame}
+
+% Paso 4
+\begin{frame}{Paso 4: Calcular $x_1$}
+    \begin{block}{Cálculo de $x_1$}
+        Usando la restricción:
+        \begin{align*}
+            x_1 &= 2000 - x_2\\
+            x_1 &= 2000 - 1193\\
+            x_1 &= 807
+        \end{align*}
+    \end{block}
+    
+    \begin{alertblock}{Resultado}
+        \begin{equation}
+            \boxed{x_1 = 807}
+        \end{equation}
+    \end{alertblock}
+\end{frame}
+
+% Paso 5
+\begin{frame}{Paso 5: Calcular el Multiplicador $\lambda$}
+    \begin{block}{Cálculo de $\lambda$}
+        Usando cualquiera de las expresiones:
+        \begin{align*}
+            \lambda &= 0.6x_1 + 8\\
+            \lambda &= 0.6(807) + 8\\
+            \lambda &= 484.2 + 8\\
+            \lambda &= 492.2
+        \end{align*}
+    \end{block}
+    
+    \begin{alertblock}{Costo Marginal}
+      \centering
+        \Large \lambda = 492.2
+    \end{alertblock}
+\end{frame}
+
+% Paso 6
+\begin{frame}{Paso 6: Verificación del Costo Mínimo}
+    \begin{block}{Cálculo del Costo Total}
+        \begin{align*}
+            C &= 0.3(807)^2 + 8(807) + 0.2(1193)^2 + 15(1193)\\
+            C &= 0.3(651249) + 6456 + 0.2(1423249) + 17895\\
+            C &= 195374.7 + 6456 + 284649.8 + 17895\\
+            C &= 504,375.5
+        \end{align*}
+    \end{block}
+    
+    \begin{alertblock}{Costo Mínimo Total}
+        \centering
+        \Large \textbf{\$504,376}
+    \end{alertblock}
+\end{frame}
+
+% Solución Óptima
+\begin{frame}{Solución Óptima}
+    \begin{block}{Distribución de Producción}
+        \begin{center}
+            \begin{tabular}{|c|c|c|}
+                \hline
+                \textbf{Planta} & \textbf{Producción} & \textbf{Porcentaje} \\
+                \hline
+                Planta 1 & 807 pares & 40.35\% \\
+                \hline
+                Planta 2 & 1193 pares & 59.65\% \\
+                \hline
+                \textbf{Total} & \textbf{2000 pares} & \textbf{100\%} \\
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{block}
+    
+    \begin{alertblock}{Resumen de la Solución}
+        \begin{itemize}
+            \item \textbf{Planta 1:} 807 pares de zapatos
+            \item \textbf{Planta 2:} 1193 pares de zapatos  
+            \item \textbf{Costo mínimo:} \$504,376
+            \item \textbf{Costo marginal:} \$492.20 por unidad adicional
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+\end{document}
