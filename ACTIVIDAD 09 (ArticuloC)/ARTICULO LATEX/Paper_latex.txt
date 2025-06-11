@@ -344,5 +344,10 @@ REPOSITORIO
 
 \url{https://github.com/FYPC7/Metodos_de_Optimizacion.git}
 
+\vspace{2em}
+BASE DE DATOS LINK
 
+\vspace{1em}
+
+\url{https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data}
 \end{document}
