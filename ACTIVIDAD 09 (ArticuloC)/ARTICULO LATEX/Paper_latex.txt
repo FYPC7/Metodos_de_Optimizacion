@@ -54,6 +54,37 @@ El estudio utilizó el conjunto de datos House Prices de Kaggle, un problema de 
 
 Las características del conjunto de datos abarcan aspectos arquitectónicos (área total, número de habitaciones, año de construcción), características del terreno (área del lote, topografía), condiciones de la propiedad (calidad general, estado de conservación) y servicios (sistemas de calefacción, garajes, piscinas). La variable objetivo corresponde al precio de venta de la vivienda, con un rango desde \$34,900 hasta \$755,000.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{FIGURA1.png}
+  \caption{Diagrama de Flujo metodológico.}
+  \label{fig:etiqueta}
+\end{figure}
+
+\subsection{Estadisticos Descriptivos}
+
+\begin{table}[htbp]
+\caption{Resumen de Estadísticos Descriptivos Relevantes}
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Variable} & \textbf{Media} & \textbf{Rango} & \textbf{Desv. Est.} \\
+\hline
+SalePrice      & \$180,921 & 34,900 -- 755,000 & 79,443 \\
+GrLivArea      & 1,515.5   & 334 -- 5,642       & --     \\
+LotArea        & 10,516.8  & 1,300 -- 215,245   & --     \\
+YearBuilt      & 1971.3    & 1872 -- 2010       & --     \\
+OverallQual    & 6.1       & 1 -- 10            & --     \\
+GarageCars     & 1.8       & 0 -- 4             & --     \\
+\hline
+\end{tabular}
+\label{tab:descriptivos}
+\end{table}
+
+
+La base de datos contiene información de 1,460 viviendas con 80 características (37 numéricas y 43 categóricas), siendo el precio de venta (\textit{SalePrice}) la variable objetivo. El precio promedio fue de \$180,921 con una alta dispersión (desviación estándar de \$79,443), lo que refleja una heterogeneidad significativa en el mercado inmobiliario. Variables como \textit{GrLivArea} y \textit{LotArea} presentan rangos amplios, indicando la presencia de viviendas con características extremas. La variable \textit{YearBuilt} muestra un rango de construcción entre 1872 y 2010, mientras que la calidad general (\textit{OverallQual}) se concentra alrededor de un valor medio de 6.1. Estas condiciones justifican el uso de métodos de optimización sin derivadas sobre una función objetivo ruidosa, costosa de evaluar y definida en un espacio de búsqueda mixto.
+
+
 \subsection{Preprocesamiento de Datos}
 
 El preprocesamiento se realizó siguiendo un protocolo estandarizado que incluye los siguientes pasos: Para variables numéricas, los valores faltantes se imputaron utilizando la mediana de cada característica, proporcionando robustez ante valores atípicos. Las variables categóricas con valores faltantes se completaron usando la moda de cada variable.
@@ -64,7 +95,8 @@ La codificación de variables categóricas se realizó mediante Label Encoding, 
 
 Se seleccionaron dos algoritmos representativos para evaluar los métodos de optimización:
 
-\subsubsection{Random Forest}
+\vspace{1em}
+\textbf{Random Forest}
 
 Este algoritmo ensemble combina múltiples árboles de decisión mediante votación promedio \cite{b6}. Los hiperparámetros optimizados incluyen el número de estimadores (10-500), profundidad máxima (3-20), mínimo de muestras para división (2-20), mínimo de muestras por hoja (1-10) y criterio de selección de características.
 
@@ -76,7 +108,8 @@ La predicción final se calcula como:
 
 donde B es el número total de árboles en el bosque, y $T_b(x)$ representa la predicción del árbol b para una entrada x.
 
-\subsubsection{XGBoost}
+\vspace{1em}
+\textbf{XGBoost}
 
 Algoritmo de gradient boosting que construye modelos de manera secuencial \cite{b7}. Su espacio de hiperparámetros es más complejo, incluyendo número de estimadores (50-500), tasa de aprendizaje (0.01-0.3), profundidad máxima (3-12), submuestreo (0.6-1.0), submuestreo de características (0.6-1.0) y parámetros de regularización L1 y L2 (0-2).
 
@@ -92,7 +125,8 @@ donde $\eta$ es la tasa de aprendizaje, y $f_t(x_i)$ es la predicción del árbo
 
 Se implementaron cuatro métodos representativos de diferentes paradigmas de optimización:
 
-\subsubsection{Tree-structured Parzen Estimator (TPE)}
+\vspace{1em}
+\textbf{Tree-structured Parzen Estimator (TPE)}
 
 Enfoque de optimización secuencial basado en modelos que construye aproximaciones del rendimiento de hiperparámetros basándose en mediciones históricas \cite{b3}. TPE modela la distribución de hiperparámetros utilizando estimadores Parzen estructurados en árbol, separando observaciones en conjuntos de alto y bajo rendimiento. La función de adquisición utilizada por TPE se define como:
 
@@ -102,7 +136,8 @@ Enfoque de optimización secuencial basado en modelos que construye aproximacion
 
 donde $f^*$ representa el mejor valor observado hasta el momento, y $p(\lambda \mid f)$ es la densidad condicional de los hiperparámetros $\lambda$ dado el rendimiento $f$.
 
-\subsubsection{Random Search}
+\vspace{1em}
+\textbf{Random Search}
 
 Método base que muestrea uniformemente el espacio de hiperparámetros. Aunque simple, proporciona una línea base robusta y es particularmente efectivo en espacios de alta dimensionalidad. Para un hiperparámetro continuo definido en el intervalo $[a,b]$ la muestra se genera como:
 
@@ -110,7 +145,8 @@ Método base que muestrea uniformemente el espacio de hiperparámetros. Aunque s
 \lambda \sim \text{Uniform}(a, b)
 \end{equation}
 
-\subsubsection{Covariance Matrix Adaptation Evolution Strategy (CMA-ES)}
+\vspace{1em}
+\textbf{Covariance Matrix Adaptation Evolution Strategy (CMA-ES)}
 
 Algoritmo evolutivo que adapta la matriz de covarianza de una distribución multivariada normal para guiar la búsqueda hacia regiones prometedoras del espacio de soluciones \cite{b4}. La generación de muestras en la iteración $g+1$ se realiza mediante:
 
@@ -120,7 +156,8 @@ x_k^{(g+1)} \sim \mathcal{N}(m^{(g)}, (\sigma^{(g)})^2 C^{(g)})
 
 donde $m^{(g)}$ es la media, $\sigma^{(g)}$ es el tamaño del paso, y $C^{(g)}$ es la matriz de covarianza correspondiente a la generación $g$.
 
-\subsubsection{Quasi-Monte Carlo (QMC)}
+\vspace{1em}
+\textbf{Quasi-Monte Carlo (QMC)}
 
 Método determinístico que utiliza secuencias de baja discrepancia para lograr una cobertura más uniforme del espacio de búsqueda comparado con métodos puramente aleatorios \cite{b8}. La discrepancia de una secuencia se define como:
 
@@ -144,12 +181,6 @@ donde $K=5$ es el número de pliegues en validación cruzada, $V_k$ es el conjun
 
 La evaluación de cada configuración de hiperparámetros se realizó mediante validación cruzada de 5 pliegues, utilizando el error cuadrático medio (RMSE) como métrica de rendimiento. Esta metodología asegura estimaciones robustas del rendimiento del modelo y reduce el riesgo de sobreajuste.
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.45\textwidth]{FIGURA1.png}
-  \caption{Diagrama de Flujo metodológico.}
-  \label{fig:etiqueta}
-\end{figure}
 
 \subsection{Implementación Técnica}
 
@@ -183,7 +214,7 @@ CMA-ES & 30,207.06 & 161.50 & 29,991.96 & 54.8 ± 12.3 \\
 \end{center}
 \end{table}
 
-TPE demostró el mejor rendimiento promedio con un RMSE de 29,803.67, superando a los métodos competidores por márgenes estadísticamente significativos. Particularmente notable es su capacidad para encontrar la mejor solución individual (RMSE = 29,355.86), indicando una exploración efectiva del espacio de búsqueda (Tabla \ref{tab1}).
+En la Tabla 2, la TPE demostró el mejor rendimiento promedio con un RMSE de 29,803.67, superando a los métodos competidores por márgenes estadísticamente significativos. Particularmente notable es su capacidad para encontrar la mejor solución individual (RMSE = 29,355.86), indicando una exploración efectiva del espacio de búsqueda (Tabla \ref{tab1}).
 
 
 \begin{figure}[htbp]
@@ -199,7 +230,7 @@ TPE demostró el mejor rendimiento promedio con un RMSE de 29,803.67, superando 
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Método} & \textbf{Evaluaciones/segundo} & \textbf{Mejora relativa (\%)} & \textbf{Convergencia (iteraciones)} \\
+\textbf{Método} & \textbf{Evaluacion/seg}& \textbf{Mejora rel (\%)}& \textbf{Convergencia}\\
 \hline
 TPE & 0.75 & - & 15-20 \\
 \hline
@@ -214,7 +245,7 @@ CMA-ES & 0.91 & +21.3 & 35-40 \\
 \end{center}
 \end{table}
 
-QMC mostró resultados interesantes con una variabilidad nula entre ejecuciones (desviación estándar = 0.00), característica esperada debido a su naturaleza determinística. Sin embargo, su rendimiento promedio fue ligeramente inferior a TPE.
+En la Tabla 3, el método QMC mostró resultados interesantes con una variabilidad nula entre ejecuciones (desviación estándar = 0.00), característica esperada debido a su naturaleza determinística. Sin embargo, su rendimiento promedio fue ligeramente inferior a TPE.
 
 Random Search, utilizado como línea base, exhibió rendimiento intermedio con variabilidad moderada. CMA-ES, sorprendentemente, mostró el peor rendimiento promedio entre los métodos evaluados, posiblemente debido a las características específicas del espacio de búsqueda de Random Forest.
 
