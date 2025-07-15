@@ -8,6 +8,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 import time
+from scipy import stats
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -250,49 +251,66 @@ def analyze_results(results, objective_name):
     
     return summary_stats
 
+
 # =============================================================================
-# 6. FUNCIONES PARA MOSTRAR TABLAS DE RESULTADOS
+# 6. ESTADÍSTICOS DESCRIPTIVOS
 # =============================================================================
 
-def print_efficiency_table(rf_summary):
-    """
-    Mostrar tabla de análisis de eficiencia computacional
-    """
-    print("\n" + "=" * 80)
-    print("TABLA I")
-    print("ANÁLISIS DE EFICIENCIA COMPUTACIONAL")
-    print("=" * 80)
+def mostrar_estadisticos_descriptivos():
     
-    # Crear tabla formateada
-    print(f"{'Método':<15} {'Evaluación/seg':<15} {'Mejora rel (%)':<15} {'Convergencia':<15}")
-    print("-" * 80)
+    df = pd.read_csv('train.csv')
     
-    # Calcular evaluaciones por segundo (asumiendo 50 evaluaciones por corrida)
-    evaluations_per_run = 50
+    print("\n=== ESTADÍSTICOS DESCRIPTIVOS SIMPLES ===")
+    print()
     
-    for method, stats in rf_summary.items():
-        eval_per_sec = evaluations_per_run / stats['mean_time']
-        
-        # Calcular mejora relativa respecto al método más lento
-        slowest_time = max([s['mean_time'] for s in rf_summary.values()])
-        slowest_eval_per_sec = evaluations_per_run / slowest_time
-        mejora_rel = ((eval_per_sec - slowest_eval_per_sec) / slowest_eval_per_sec) * 100
-        
-        # Estimar convergencia (trials necesarios para alcanzar 95% del mejor resultado)
-        best_overall = min([s['min_rmse'] for s in rf_summary.values()])
-        target_rmse = best_overall * 1.05  # 5% peor que el mejor
-        convergencia = "15-20" if method == "TPE" else "25-30" if method == "QMC" else "30-35" if method == "Random Search" else "35-40"
-        
-        print(f"{method:<15} {eval_per_sec:<15.2f} {mejora_rel:+<15.1f} {convergencia:<15}")
-    
-    print("=" * 80)
+    # 2. VARIABLE OBJETIVO (SalePrice)
+    print(" PRECIOS DE CASAS (SalePrice):")
+    print(f"• Precio mínimo: ${df['SalePrice'].min():,}")
+    print(f"• Precio máximo: ${df['SalePrice'].max():,}")
+    print(f"• Precio promedio: ${df['SalePrice'].mean():,.0f}")
+    print(f"• Precio mediano: ${df['SalePrice'].median():,.0f}")
+    print(f"• Desviación estándar: ${df['SalePrice'].std():,.0f}")
+    print()
+
+    # 3. VARIABLES NUMÉRICAS MÁS IMPORTANTES
+    print(" VARIABLES NUMÉRICAS CLAVE:")
+    vars_importantes = ['GrLivArea', 'LotArea', 'YearBuilt', 'OverallQual', 'GarageCars']
+    for var in vars_importantes:
+        if var in df.columns:
+            print(f"• {var}:")
+            print(f"  - Promedio: {df[var].mean():.1f}")
+            print(f"  - Rango: {df[var].min():.0f} - {df[var].max():.0f}")
+            print(f"  - Valores faltantes: {df[var].isnull().sum()}")
+    print()
+
+    # 4. VARIABLES CATEGÓRICAS MÁS IMPORTANTES
+    print(" VARIABLES CATEGÓRICAS CLAVE:")
+    vars_categoricas = ['Neighborhood', 'HouseStyle', 'ExterQual']
+    for var in vars_categoricas:
+        if var in df.columns:
+            print(f"• {var}:")
+            print(f"  - Categorías únicas: {df[var].nunique()}")
+            print(f"  - Más común: {df[var].mode()[0]} ({df[var].value_counts().iloc[0]} casas)")
+            print(f"  - Valores faltantes: {df[var].isnull().sum()}")
+    print()
+
+    # 5. RESUMEN DE VALORES FALTANTES
+    print(" RESUMEN DE VALORES FALTANTES:")
+    missing_total = df.isnull().sum().sum()
+    missing_percent = (missing_total / (df.shape[0] * df.shape[1])) * 100
+    print(f"• Total de valores faltantes: {missing_total:,}")
+    print(f"• Porcentaje del dataset: {missing_percent:.1f}%")
+    print()
+
+# =============================================================================
+# 7. FUNCIONES PARA MOSTRAR TABLAS DE RESULTADOS
+# =============================================================================
 
 def print_performance_table(rf_summary):
     """
     Mostrar tabla de rendimiento comparativo
     """
     print("\n" + "=" * 100)
-    print("TABLA II")
     print("RENDIMIENTO COMPARATIVO DE MÉTODOS DE OPTIMIZACIÓN SIN")
     print("DERIVADAS PARA RANDOM FOREST")
     print("=" * 100)
@@ -312,7 +330,7 @@ def print_performance_table(rf_summary):
     print("=" * 100)
 
 # =============================================================================
-# 7. EJECUTAR EXPERIMENTO COMPLETO
+# 8. EJECUTAR EXPERIMENTO COMPLETO
 # =============================================================================
 
 print(" INICIANDO EXPERIMENTO DERIVATIVE-FREE OPTIMIZATION")
@@ -543,9 +561,6 @@ def compare_rf_vs_xgboost(rf_summary, xgb_summary):
         'improvement_pct': improvement_pct
     }
 
-# =============================================================================
-# EJECUTAR EXPERIMENTO COMPLETO
-# =============================================================================
 
 if __name__ == "__main__":
     # Ejecutar optimización XGBoost
@@ -563,24 +578,13 @@ if __name__ == "__main__":
     
     print("\n EXPERIMENTO COMPLETADO")
     
+    mostrar_estadisticos_descriptivos()
     # Mostrar las tablas de resultados
-    print_efficiency_table(rf_summary)
     print_performance_table(rf_summary)
 
 # =============================================================================
-# VISUALIZACIONES PROFESIONALES - DERIVATIVE-FREE OPTIMIZATION
-# Para tu artículo científico
-# =============================================================================
+# VISUALIZACIONES 
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-import pandas as pd
-from scipy import stats
-import warnings
-warnings.filterwarnings('ignore')
-
-# Configurar estilo profesional
 plt.style.use('seaborn-v0_8')
 sns.set_palette("husl")
 plt.rcParams['figure.figsize'] = (12, 8)
@@ -589,8 +593,6 @@ plt.rcParams['axes.labelsize'] = 14
 plt.rcParams['axes.titlesize'] = 16
 plt.rcParams['legend.fontsize'] = 12
 
-print("CREANDO VISUALIZACIONES PROFESIONALES")
-print("=" * 50)
 
 # =============================================================================
 # DATOS DE TUS RESULTADOS
