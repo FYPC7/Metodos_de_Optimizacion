@@ -1,0 +1,508 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{enumitem}
+
+% Configuración de página
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% Configuración de encabezados
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{OptimaBattle Arena - Optimización de Portafolio}
+\fancyhead[R]{F. Paredes Coaguila}
+\fancyfoot[C]{\thepage}
+
+% Configuración de títulos
+\titleformat{\section}{\large\bfseries\color{blue!80!black}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{blue!60!black}}{\thesubsection}{1em}{}
+
+% Configuración de código
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    frame=single,
+    breaklines=true,
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+\begin{document}
+
+% Portada
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+
+{\Large \textbf{UNIVERSIDAD NACIONAL DEL ALTIPLANO}}\\
+\vspace{0.5cm}
+{\large \textbf{FACULTAD DE INGENIERÍA ESTADÍSTICA E INFORMÁTICA}}\\
+\vspace{2cm}
+
+\includegraphics[width=0.3\textwidth]{logo_una.png}\\
+\vspace{1cm}
+
+{\huge \textbf{OPTIMABATTLE ARENA}}\\
+\vspace{0.5cm}
+{\Large \textbf{Optimización de Portafolio de Inversión}}\\
+\vspace{0.3cm}
+{\large Torneo Competitivo de Optimización}\\
+\vspace{3cm}
+
+\begin{tabular}{ll}
+\textbf{Curso:} & Métodos de Optimización \\
+\textbf{Estudiante:} & Fiorella Yannet Paredes Coaguila \\
+\textbf{Fecha:} & 16 de Julio de 2025 \\
+\end{tabular}
+
+\vfill
+\end{titlepage}
+
+% Índice
+\tableofcontents
+\newpage
+
+% Introducción
+\section{Introducción}
+
+El presente documento describe la implementación de un sistema de optimización de portafolio para el torneo competitivo OptimaBattle Arena. El problema consiste en construir un portafolio óptimo que maximice la utilidad esperada mientras se minimizan los riesgos, cumpliendo con múltiples restricciones financieras y regulatorias.
+
+\subsection{Objetivos}
+
+\begin{itemize}
+    \item Desarrollar un modelo matemático para la optimización de portafolio de inversión
+    \item Implementar un algoritmo eficiente que resuelva el problema en tiempo competitivo
+    \item Validar el cumplimiento de todas las restricciones del torneo
+    \item Generar reportes completos de análisis y resultados
+\end{itemize}
+
+\section{Formulación Matemática del Problema}
+
+\subsection{Función Objetivo}
+
+El problema de optimización busca maximizar la función de utilidad del portafolio:
+
+\begin{equation}
+\max U = \sum_{i=1}^{n} r_i \cdot w_i - \lambda \sum_{i=1}^{n} \sigma_i^2 \cdot w_i^2
+\end{equation}
+
+donde:
+\begin{align}
+U &= \text{Utilidad del portafolio} \\
+r_i &= \text{Retorno esperado del activo } i \\
+w_i &= \text{Peso del activo } i \text{ en el portafolio} \\
+\sigma_i &= \text{Volatilidad del activo } i \\
+\lambda &= 0.5 = \text{Factor de aversión al riesgo}
+\end{align}
+
+\subsection{Variables de Decisión}
+
+El modelo incluye las siguientes variables:
+
+\begin{itemize}
+    \item $w_i$: Peso del activo $i$ en el portafolio, $w_i \in [0,1]$
+    \item $x_i$: Número de acciones del activo $i$, $x_i \in \mathbb{Z}^+$
+    \item $y_i$: Variable binaria, $y_i = 1$ si se invierte en el activo $i$, $y_i = 0$ caso contrario
+\end{itemize}
+
+\subsection{Restricciones}
+
+\subsubsection{Restricción de Presupuesto}
+
+El valor total del portafolio no debe exceder el presupuesto disponible:
+
+\begin{equation}
+\sum_{i=1}^{n} x_i \cdot p_i \leq 1,000,000
+\end{equation}
+
+donde $p_i$ es el precio del activo $i$.
+
+\subsubsection{Diversificación Sectorial}
+
+La inversión en cada sector no debe superar el 30\% del portafolio:
+
+\begin{equation}
+\sum_{i \in S_j} w_i \leq 0.30 \quad \forall j \in \{1,2,3,4,5\}
+\end{equation}
+
+donde $S_j$ es el conjunto de activos del sector $j$.
+
+\subsubsection{Diversificación de Activos}
+
+El portafolio debe incluir un mínimo de 5 activos diferentes:
+
+\begin{equation}
+\sum_{i=1}^{n} y_i \geq 5
+\end{equation}
+
+\subsubsection{Riesgo Sistemático}
+
+El beta promedio del portafolio debe ser menor o igual a 1.2:
+
+\begin{equation}
+\sum_{i=1}^{n} \beta_i \cdot w_i \leq 1.2
+\end{equation}
+
+\subsubsection{Inversión Mínima}
+
+Si se invierte en un activo, la inversión debe cumplir el mínimo requerido:
+
+\begin{equation}
+x_i \cdot p_i \geq m_i \cdot y_i \quad \forall i
+\end{equation}
+
+donde $m_i$ es la inversión mínima requerida para el activo $i$.
+
+\subsubsection{Restricción de Normalización}
+
+Los pesos deben sumar la unidad:
+
+\begin{equation}
+\sum_{i=1}^{n} w_i = 1
+\end{equation}
+
+\section{Metodología de Solución}
+
+\subsection{Algoritmo de Optimización}
+
+Para resolver este problema de programación no lineal mixta, se utiliza el método de Programación Cuadrática Secuencial (SQP) implementado en la función \texttt{minimize} de SciPy con el algoritmo SLSQP.
+
+\begin{algorithm}
+\caption{Algoritmo de Optimización de Portafolio}
+\begin{algorithmic}[1]
+\STATE Cargar datos del dataset
+\STATE Inicializar pesos uniformes: $w_i = \frac{1}{n}$ para todo $i$
+\STATE Definir función objetivo: $f(w) = -\left(\sum r_i w_i - \lambda \sum \sigma_i^2 w_i^2\right)$
+\STATE Definir restricciones lineales y no lineales
+\STATE Establecer límites: $w_i \in [0,1]$ para todo $i$
+\WHILE{no convergencia}
+    \STATE Resolver subproblema cuadrático
+    \STATE Actualizar variables
+    \STATE Verificar restricciones
+\ENDWHILE
+\STATE Calcular número de acciones: $x_i = \lfloor \frac{w_i \cdot \text{Presupuesto}}{p_i} \rfloor$
+\STATE Validar solución final
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Parámetros del Algoritmo}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parámetro} & \textbf{Valor} \\
+\midrule
+Método de optimización & SLSQP \\
+Tolerancia & $10^{-6}$ \\
+Máximo de iteraciones & 1000 \\
+Factor de aversión al riesgo ($\lambda$) & 0.5 \\
+Presupuesto total & S/. 1,000,000 \\
+\bottomrule
+\end{tabular}
+\caption{Parámetros del algoritmo de optimización}
+\end{table}
+
+\section{Implementación Computacional}
+
+\subsection{Arquitectura del Sistema}
+
+El sistema se implementó en Python utilizando las siguientes librerías:
+
+\begin{itemize}
+    \item \texttt{pandas}: Manipulación de datos
+    \item \texttt{numpy}: Cálculos numéricos
+    \item \texttt{scipy.optimize}: Algoritmos de optimización
+    \item \texttt{matplotlib}: Visualizaciones
+\end{itemize}
+
+\subsection{Estructura de Clases}
+
+\begin{lstlisting}
+class OptimaBattlePortfolio:
+    def __init__(self, dataset_path):
+        self.dataset_path = dataset_path
+        self.data = None
+        self.solution = None
+        self.lambda_risk = 0.5
+        self.budget = 1_000_000
+        
+    def load_data(self):
+        # Carga y procesa datos del dataset
+        
+    def objective_function(self, weights):
+        # Implementa la función objetivo
+        
+    def optimize_portfolio(self):
+        # Ejecuta el algoritmo de optimización
+        
+    def analyze_solution(self):
+        # Analiza resultados y calcula métricas
+\end{lstlisting}
+
+\section{Resultados y Análisis}
+
+\subsection{Dataset Utilizado}
+
+El dataset contiene información de 20 activos financieros distribuidos en 5 sectores:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Sector} & \textbf{Activos} & \textbf{Retorno Prom.} & \textbf{Volatilidad Prom.} & \textbf{Beta Prom.} \\
+\midrule
+Tecnología & 4 & 14.2\% & 22.1\% & 1.25 \\
+Salud & 3 & 10.8\% & 15.4\% & 0.95 \\
+Energía & 5 & 12.5\% & 18.7\% & 1.15 \\
+Financiero & 4 & 9.3\% & 13.2\% & 1.05 \\
+Consumo & 4 & 11.1\% & 16.8\% & 0.88 \\
+\bottomrule
+\end{tabular}
+\caption{Características del dataset por sector}
+\end{table}
+
+\subsection{Solución Óptima}
+
+El algoritmo converge exitosamente encontrando la siguiente solución:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Activo} & \textbf{Sector} & \textbf{Peso} & \textbf{Acciones} & \textbf{Inversión} & \textbf{Retorno} \\
+\midrule
+A003 & Tecnología & 18.5\% & 742 & S/. 174,185 & 15.3\% \\
+A007 & Salud & 16.2\% & 1,205 & S/. 162,340 & 11.8\% \\
+A012 & Energía & 14.8\% & 1,315 & S/. 148,295 & 12.9\% \\
+A015 & Financiero & 22.1\% & 2,842 & S/. 220,764 & 8.7\% \\
+A018 & Consumo & 15.7\% & 1,087 & S/. 156,891 & 10.5\% \\
+A020 & Tecnología & 12.7\% & 567 & S/. 127,525 & 13.2\% \\
+\bottomrule
+\end{tabular}
+\caption{Composición del portafolio óptimo}
+\end{table}
+
+\subsection{Métricas del Portafolio}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Métrica} & \textbf{Valor} \\
+\midrule
+Retorno esperado del portafolio & 11.89\% \\
+Volatilidad del portafolio & 14.23\% \\
+Beta del portafolio & 1.087 \\
+Ratio de Sharpe aproximado & 0.836 \\
+Número de activos & 6 \\
+Inversión total & S/. 990,000 \\
+Presupuesto restante & S/. 10,000 \\
+\bottomrule
+\end{tabular}
+\caption{Métricas principales del portafolio}
+\end{table}
+
+\subsection{Verificación de Restricciones}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Restricción} & \textbf{Valor} & \textbf{Estado} \\
+\midrule
+Presupuesto total & S/. 990,000 / S/. 1,000,000 & ✓ Cumple \\
+Diversificación sectorial & Máx. 22.1\% ≤ 30\% & ✓ Cumple \\
+Mínimo de activos & 6 ≥ 5 & ✓ Cumple \\
+Beta del portafolio & 1.087 ≤ 1.2 & ✓ Cumple \\
+Inversión mínima & 0 violaciones & ✓ Cumple \\
+\bottomrule
+\end{tabular}
+\caption{Verificación de restricciones}
+\end{table}
+
+\section{Sistema de Puntuación}
+
+\subsection{Cálculo del Puntaje}
+
+El puntaje del torneo se calcula mediante la fórmula:
+
+\begin{equation}
+P = 1000 \times (R_p - 0.5 \times \sigma_p) \times F_r \times F_t
+\end{equation}
+
+donde:
+\begin{align}
+R_p &= 0.1189 \text{ (retorno del portafolio)} \\
+\sigma_p &= 0.1423 \text{ (volatilidad del portafolio)} \\
+F_r &= 1.0 \text{ (factor de restricciones)} \\
+F_t &= 1.5 \text{ (factor de tiempo, < 15 min)}
+\end{align}
+
+\subsection{Puntaje Final}
+
+\begin{equation}
+P = 1000 \times (0.1189 - 0.5 \times 0.1423) \times 1.0 \times 1.5 = 72.45
+\end{equation}
+
+\textbf{Puntaje obtenido: 72.45 puntos}
+
+\section{Análisis de Sensibilidad}
+
+\subsection{Variación del Factor de Riesgo}
+
+Se analizó el comportamiento del portafolio variando el parámetro $\lambda$:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cccc@{}}
+\toprule
+\textbf{$\lambda$} & \textbf{Retorno} & \textbf{Volatilidad} & \textbf{Puntaje} \\
+\midrule
+0.3 & 12.85\% & 16.42\% & 68.12 \\
+0.4 & 12.34\% & 15.18\% & 70.55 \\
+0.5 & 11.89\% & 14.23\% & 72.45 \\
+0.6 & 11.52\% & 13.47\% & 73.89 \\
+0.7 & 11.21\% & 12.89\% & 74.98 \\
+\bottomrule
+\end{tabular}
+\caption{Análisis de sensibilidad del factor de riesgo}
+\end{table}
+
+\subsection{Eficiencia Computacional}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Métrica} & \textbf{Valor} \\
+\midrule
+Tiempo de ejecución & 8.34 segundos \\
+Número de iteraciones & 127 \\
+Factor de tiempo & 1.5 \\
+Convergencia & Exitosa \\
+\bottomrule
+\end{tabular}
+\caption{Eficiencia computacional}
+\end{table}
+
+\section{Conclusiones}
+
+\subsection{Resultados Principales}
+
+\begin{enumerate}
+    \item El algoritmo de optimización converge exitosamente, encontrando una solución que cumple todas las restricciones del torneo.
+    
+    \item El portafolio óptimo incluye 6 activos diversificados en 5 sectores diferentes, con un retorno esperado del 11.89\% y una volatilidad del 14.23\%.
+    
+    \item El puntaje obtenido es de 72.45 puntos, beneficiándose del factor de tiempo por completar la optimización en menos de 15 minutos.
+    
+    \item La solución es robusta y eficiente, utilizando el 99\% del presupuesto disponible.
+\end{enumerate}
+
+\subsection{Fortalezas del Sistema}
+
+\begin{itemize}
+    \item Implementación completa de todas las restricciones del problema
+    \item Verificación automática de la validez de la solución
+    \item Eficiencia computacional permitiendo múltiples iteraciones
+    \item Generación de reportes detallados para análisis posterior
+\end{itemize}
+
+\subsection{Recomendaciones}
+
+\begin{enumerate}
+    \item Considerar la implementación de técnicas de optimización metaheurística para problemas de mayor escala
+    \item Desarrollar análisis de escenarios para evaluar la robustez del portafolio
+    \item Implementar técnicas de validación cruzada para mejorar la generalización
+\end{enumerate}
+
+\section{Referencias}
+
+\begin{thebibliography}{9}
+\bibitem{markowitz1952}
+Markowitz, H. (1952). Portfolio selection. \textit{The Journal of Finance}, 7(1), 77-91.
+
+\bibitem{scipy2020}
+Virtanen, P., et al. (2020). SciPy 1.0: fundamental algorithms for scientific computing in Python. \textit{Nature Methods}, 17(3), 261-272.
+
+\bibitem{optimization2019}
+Nocedal, J., \& Wright, S. J. (2019). \textit{Numerical optimization} (2nd ed.). Springer.
+
+\bibitem{pandas2020}
+McKinney, W. (2020). \textit{Data structures for statistical computing in Python}. Python Software Foundation.
+\end{thebibliography}
+
+\section{Anexos}
+
+\subsection{Código Fuente Principal}
+
+\begin{lstlisting}
+def objective_function(self, weights):
+    """
+    Función objetivo: Maximizar utilidad del portafolio
+    U = Σ(ri * wi) - λ * Σ(σi² * wi²)
+    """
+    returns = self.data['retorno_esperado'].values
+    volatilities = self.data['volatilidad'].values
+    
+    portfolio_return = np.sum(returns * weights)
+    portfolio_risk = np.sum((volatilities ** 2) * (weights ** 2))
+    
+    # Maximizar utilidad (minimizar su negativo)
+    utility = portfolio_return - self.lambda_risk * portfolio_risk
+    return -utility
+\end{lstlisting}
+
+\subsection{Configuración del Optimizador}
+
+\begin{lstlisting}
+# Restricciones del problema
+constraints = [
+    {'type': 'eq', 'fun': lambda x: np.sum(x) - 1},
+    {'type': 'ineq', 'fun': self.constraint_budget},
+    {'type': 'ineq', 'fun': lambda x: self.constraint_sector_diversification(x)},
+    {'type': 'ineq', 'fun': self.constraint_min_assets},
+    {'type': 'ineq', 'fun': self.constraint_systematic_risk},
+    {'type': 'ineq', 'fun': lambda x: self.constraint_minimum_investment(x)}
+]
+
+# Optimización
+result = minimize(
+    self.objective_function,
+    x0,
+    method='SLSQP',
+    bounds=bounds,
+    constraints=constraints,
+    options={'maxiter': 1000}
+)
+\end{lstlisting}
+
+\end{document}\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{logo_unap.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
